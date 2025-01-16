@@ -1,0 +1,155 @@
+import React from 'react';
+import {View, Text, FlatList, StyleSheet, Image} from 'react-native';
+
+const leaderboardData = [
+  {
+    id: '1',
+    name: 'Justin',
+    earnings: '$1500',
+    points: '500',
+    joined: '01/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+  {
+    id: '2',
+    name: 'Brian',
+    earnings: '$1423',
+    points: '480',
+    joined: '02/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+  {
+    id: '3',
+    name: 'Alex',
+    earnings: '$1300',
+    points: '450',
+    joined: '03/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+  {
+    id: '4',
+    name: 'Emily',
+    earnings: '$1200',
+    points: '400',
+    joined: '04/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+  {
+    id: '5',
+    name: 'Bob',
+    earnings: '$1100',
+    points: '380',
+    joined: '05/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+  {
+    id: '6',
+    name: 'Michelle',
+    earnings: '$1000',
+    points: '350',
+    joined: '06/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+  {
+    id: '7',
+    name: 'Sarah',
+    earnings: '$900',
+    points: '300',
+    joined: '07/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+  {
+    id: '8',
+    name: 'David',
+    earnings: '$800',
+    points: '280',
+    joined: '08/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+  {
+    id: '9',
+    name: 'Laura',
+    earnings: '$700',
+    points: '250',
+    joined: '09/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+  {
+    id: '10',
+    name: 'William',
+    earnings: '$600',
+    points: '200',
+    joined: '10/01/2022',
+    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+  },
+];
+
+const Leaderboard = () => {
+  const renderItem = ({item}) => (
+    <View style={styles.itemContainer}>
+      <Image source={{uri: item.image}} style={styles.image} />
+      <View style={styles.details}>
+        <Text style={styles.name}>
+          {item.id}. {item.name}
+        </Text>
+        <Text style={styles.detailsText}>
+          Total earnings: {item.earnings} · Points: {item.points}
+        </Text>
+        <Text style={styles.detailsText}>Joined: {item.joined}</Text>
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Leaderboard</Text>
+      <FlatList
+        data={leaderboardData}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    padding: 10,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10,
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 15,
+  },
+  details: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  detailsText: {
+    fontSize: 14,
+    color: '#666',
+  },
+});
+
+export default Leaderboard;
