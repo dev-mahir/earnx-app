@@ -15,8 +15,7 @@ import {
   AdEventType,
 } from 'react-native-google-mobile-ads';
 
-export default function LetterMissingGame() {
-   
+export default function WordGameScreen() {
   const words = ['javascript', 'python', 'ruby', 'java', 'html', 'css'];
   const [currentWord, setCurrentWord] = useState('');
   const [missingIndex, setMissingIndex] = useState(-1);
@@ -55,8 +54,6 @@ export default function LetterMissingGame() {
 
   // Check if the user's guess is correct
   const checkGuess = () => {
-  
-
     if (userInput.toLowerCase() === currentWord) {
       setScore(prevScore => prevScore + 5);
       setResult('Success! You guessed correctly. 🎉');

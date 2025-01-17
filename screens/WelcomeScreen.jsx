@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import BannerAds from '../components/ads/BannerAds';
 
 const WelcomeBackScreen = ({navigation}) => {
   const [input, setInput] = useState({
@@ -19,7 +20,7 @@ const WelcomeBackScreen = ({navigation}) => {
 
   const handleLogin = () => {
     navigation.navigate('Game');
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -48,26 +49,15 @@ const WelcomeBackScreen = ({navigation}) => {
         <Text style={styles.forgotText}>Forgot password?</Text>
       </TouchableOpacity>
 
-
-
-      <TouchableOpacity style={styles.button} onPress={handleLogin} >
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Log in</Text>
       </TouchableOpacity>
-
-
 
       <Text style={styles.signupText}>
         New user? <Text style={styles.linkText}>Sign Up</Text>
       </Text>
 
-      <BannerAd
-        unitId={TestIds.BANNER}
-        size={BannerAdSize.FULL_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-      />
-      
+      <BannerAds />
     </View>
   );
 };
