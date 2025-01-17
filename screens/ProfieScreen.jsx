@@ -1,31 +1,53 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 
 const ProfileScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Lily</Text>
-      <Text style={styles.amount}>$120.00</Text>
-
-      <View style={styles.separator} />
-
-      <Text style={styles.label}>Total earnings</Text>
-      <Text style={styles.amount}>$120.00</Text>
-
-      <View style={styles.separator} />
-
-      <View style={styles.tokenContainer}>
-        <Text style={styles.label}>Tokens balance</Text>
-        <Text style={styles.tokenAmount}>10,000</Text>
+      <View style={styles.profileInfo}>
+        <Image
+          source={require('../assets/earnx.png')}
+          style={styles.profileImage}
+        />
+        <Text style={styles.profileName}>Lily, $120.00</Text>
+        <TouchableOpacity style={styles.editProfileButton}>
+          <Text style={styles.editProfileText}>Edit Profile</Text>
+        </TouchableOpacity>
       </View>
-
-      <View style={styles.separator} />
-
-      <View style={styles.navContainer}>
-        <Text style={styles.navItem}>Home</Text>
-        <Text style={styles.navItem}>Game Rules</Text>
-        <Text style={styles.navItem}>Store</Text>
-        <Text style={styles.navItem}>Profile</Text>
+      <View style={styles.infoSection}>
+        <View style={styles.infoItem}>
+          <Text style={styles.infoTitle}>Total earnings</Text>
+          <View style={styles.infoValueContainer}>
+            <Text style={styles.infoValue}>$120.00</Text>
+            <TouchableOpacity style={styles.arrowIcon}>
+              <Text>→</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.infoItem}>
+          <Text style={styles.infoTitle}>Tokens balance</Text>
+          <View style={styles.infoValueContainer}>
+            <Text style={styles.infoValue}>10,000</Text>
+            <TouchableOpacity style={styles.arrowIcon}>
+              <Text>→</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      <View style={styles.settingsSection}>
+        <Text style={styles.settingsTitle}>Settings</Text>
+        <View style={styles.infoItem}>
+          <Text style={styles.infoTitle}>Notifications</Text>
+          <TouchableOpacity style={styles.arrowIcon}>
+            <Text>→</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.infoItem}>
+          <Text style={styles.infoTitle}>Privacy</Text>
+          <TouchableOpacity style={styles.arrowIcon}>
+            <Text>→</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -35,42 +57,67 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 20,
+  },
+  searchIcon: {
+    padding: 10,
+  },
+  profileInfo: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+  },
+  profileName: {
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginVertical: 10,
   },
-  amount: {
-    fontSize: 18,
-    color: '#333',
+  editProfileButton: {
+    backgroundColor: '#e9eef2',
+    padding: 10,
+    borderRadius: 5,
   },
-  separator: {
-    height: 1,
-    backgroundColor: '#eee',
-    marginVertical: 15,
+  editProfileText: {
+    color: '#00',
   },
-  label: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 5,
+  infoSection: {
+    marginBottom: 20,
   },
-  tokenContainer: {
+  infoItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingVertical: 10,
   },
-  tokenAmount: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  infoTitle: {
+    fontSize: 16,
   },
-  navContainer: {
+  infoValueContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  infoValue: {
+    fontSize: 16,
+    marginRight: 10,
+  },
+  arrowIcon: {
+    padding: 5,
+  },
+  settingsSection: {
     marginTop: 20,
   },
-  navItem: {
-    fontSize: 16,
-    color: '#333',
+  settingsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 });
 

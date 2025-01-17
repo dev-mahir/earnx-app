@@ -1,0 +1,330 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Game</title>
+  
+  <link rel="stylesheet" href="styles.css">
+  
+  
+
+</head>
+<body>
+  <div id="gameArea">
+    <div id="road">
+      <div id="car"></div>
+    </div>
+    <div id="scoreBoard">
+      Score: <span id="score">0</span> | Level: <span id="level">1</span> | Coins: <span id="coins">0</span>
+    </div>
+    <button id="pauseResumeButton">></button>=</button></button>
+  </div>
+<script src="game.js"></script>
+
+</body>
+</html>    
+    const car = document.getElementById("car");
+    const road = document.getElementById("road");
+    const scoreBoard = document.getElementById("score");
+    const levelBoard = document.getElementById("level");
+    const coinsBoard = document.getElementById("coins");
+    const pauseResumeButton = document.getElementById("pauseResumeButton");
+
+    let score = 0;
+    let level = 1;
+    let coins = 0;
+    let carPosition = 50; // Car's horizontal position (percentage)
+    let isPaused = false;
+    let gameInterval;
+
+    // Load data from localStorage
+    function loadGameData() {
+      const savedScore = localStorage.getItem("score");
+      const savedLevel = localStorage.getItem("level");
+      const savedCoins = localStorage.getItem("coins");
+
+      score = savedScore ? parseInt(savedScore) : 0;
+      level = savedLevel ? parseInt(savedLevel) : 1;
+      coins = savedCoins ? parseInt(savedCoins) : 0;
+
+      updateUI();
+    }
+
+    // Save data to localStorage
+    function saveGameData() {
+      localStorage.setItem("score", score);
+      localStorage.setItem("level", level);
+      localStorage.setItem("coins", coins);
+    }
+
+    // Update UI
+    function updateUI() {
+      scoreBoard.textContent = score;
+      levelBoard.textContent = level;
+      coinsBoard.textContent = coins;
+    }
+
+    // Update score, level, and coins
+    function updateScore() {
+      score += 1;
+      updateUI();
+
+      // Level up every 100 points
+      if (score % 100 === 0) {
+        level += 1;
+      }
+    }
+
+    function updateCoins(isGold = true) {
+      if (isGold) {
+        coins += 5; // Gold coin points
+      } else {
+        coins += 2; // Silver coin points
+      }
+      updateUI();
+    }
+
+    // Create obstacles
+    function createObstacle() {
+      const obstacle = document.createElement("div");
+      obstacle.classList.add("obstacle");
+      obstacle.style.left = ${Math.random() * 80}%; // Random horizontal position
+      road.appendChild(obstacle);
+
+      obstacle.addEventListener("animationend", () => obstacle.remove());
+      checkCollision(obstacle);
+    }
+
+    // Create coins
+    function createCoin() {
+      const coin = document.createElement("div");
+      coin.classList.add("coin");
+      coin.style.left = ${Math.random() * 80}%; // Random horizontal position
+      road.appendChild(coin);
+
+      coin.addEventListener("animationend", () => coin.remove());
+      checkCollision(coin, true); // true for gold coin
+    }
+
+    function createSilverCoin() {
+      const silverCoin = document.createElement("div");
+      silverCoin.classList.add("silver-coin");
+      silverCoin.style.left = ${Math.random() * 80}%; // Random horizontal position
+      road.appendChild(silverCoin);
+
+      silverCoin.addEventListener("animationend", () => silverCoin.remove());
+      checkCollision(silverCoin, true); // false for silver coin
+    }
+
+    // Check for collisions
+    function checkCollision(element, isCoin = false) {
+      const interval = setInterval(() => {
+        if (isPaused) return; // Stop collision checks when paused
+        const carRect = car.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+
+        if (
+          carRect.left < elementRect.right &&
+          carRect.right > elementRect.left &&
+          carRect.top < elementRect.bottom &&
+          carRect.bottom > elementRect.top
+        ) {
+          if (isCoin) {
+            updateCoins(element.classList.contains("coin"));
+          } else {
+            saveGameData(); // Save game data on game over
+            alert("Game Over!");
+            location.reload();
+          }
+          element.remove();
+          clearInterval(interval);
+        }
+      }, 100);
+    }
+
+    // Pause/Resume functionality
+    pauseResumeButton.addEventListener("click", () => {
+      isPaused = !isPaused;
+      pauseResumeButton.textContent = isPaused ? "Resume" : "Pause";
+
+      const elements = document.querySelectorAll(".coin, .silver-coin, .obstacle");
+      elements.forEach(el => {
+        if (isPaused) {
+          el.classList.add("paused");
+        } else {
+          el.classList.remove("paused");
+        }
+      });
+
+      if (isPaused) {
+        clearInterval(gameInterval); // Stop game loop
+      } else {
+        gameInterval = setInterval(gameLoop, 500); // Resume game loop
+      }
+    });
+    
+    
+    
+    
+    // Handle touch/slide controls
+    let startX = null;
+
+    road.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    road.addEventListener("touchmove", (e) => {
+      if (startX === null) return;
+
+      const touchX = e.touches[0].clientX;
+      const diff = touchX - startX;
+
+      // Move car left or right based on touch movement
+      carPosition += (diff / road.offsetWidth) * 100; // Convert pixel movement to percentage
+      carPosition = Math.max(0, Math.min(100, carPosition)); // Limit movement to within road
+      car.style.left = ${carPosition}%;
+
+      startX = touchX; // Update startX for smooth movement
+    });
+
+    // Main game loop
+    function gameLoop() {
+      if (isPaused) return;
+
+      updateScore();
+
+      // Randomly create elements
+      if (Math.random() < 0.3) createObstacle();
+      if (Math.random() < 0.1) createCoin();
+      if (Math.random() < 0.2) createSilverCoin();
+    }
+
+    // Start the game
+    loadGameData(); // Load game data from localStorage
+    gameInterval = setInterval(gameLoop, 500);
+       <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #333;
+    }
+
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background-color: #555;
+      overflow: hidden;
+    }
+
+    #road {
+      position: relative;
+      width: 80%;
+      height: 100%;
+      margin: 0 auto;
+      background: linear-gradient(#ff95be, #eee);
+      border: 2px solid red;
+      overflow: hidden;
+    }
+
+    #car {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      width: 50px;
+      height: 100px;
+      background: url("car.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transform: translateX(-50%);
+      border-radius: 5px;
+    }
+
+    .coin, .silver-coin, .obstacle {
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      animation: moveDown 3s linear infinite;
+    }
+
+
+.coin {
+  width: 100px; /* Set the width of the coin */
+  height: 100px; /* Set the height of the coin */
+  background: url("gold.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: flip 3s infinite ease-in-out;
+  transform-origin: center;
+}
+
+@keyframes flip {
+  0% {
+    transform: perspective(1000px) rotateY(0deg);
+  }
+  50% {
+    transform: perspective(1000px) rotateY(180deg);
+  }
+  100% {
+    transform: perspective(1000px) rotateY(360deg);
+  }
+}
+
+
+
+   
+     
+    .silver-coin {
+      background: url("silver.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+
+
+
+
+    .obstacle {
+      background-color: red;
+    }
+
+    @keyframes moveDown {
+      0% {
+        top: -50px;
+      }
+      100% {
+        top: 100%;
+      }
+    }
+
+    
+    .paused {
+      animation-play-state: paused !important;
+    }
+
+    #scoreBoard {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-size: 20px;
+    }
+
+    #pauseResumeButton {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>  

@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, FlatList, StyleSheet, Image} from 'react-native';
+import BannerAds from '../components/ads/BannerAds';
 
 const leaderboardData = [
   {
@@ -8,7 +9,8 @@ const leaderboardData = [
     earnings: '$1500',
     points: '500',
     joined: '01/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
   {
     id: '2',
@@ -16,7 +18,8 @@ const leaderboardData = [
     earnings: '$1423',
     points: '480',
     joined: '02/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
   {
     id: '3',
@@ -24,7 +27,8 @@ const leaderboardData = [
     earnings: '$1300',
     points: '450',
     joined: '03/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
   {
     id: '4',
@@ -32,7 +36,8 @@ const leaderboardData = [
     earnings: '$1200',
     points: '400',
     joined: '04/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
   {
     id: '5',
@@ -40,7 +45,8 @@ const leaderboardData = [
     earnings: '$1100',
     points: '380',
     joined: '05/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
   {
     id: '6',
@@ -48,7 +54,8 @@ const leaderboardData = [
     earnings: '$1000',
     points: '350',
     joined: '06/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
   {
     id: '7',
@@ -56,7 +63,8 @@ const leaderboardData = [
     earnings: '$900',
     points: '300',
     joined: '07/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
   {
     id: '8',
@@ -64,7 +72,8 @@ const leaderboardData = [
     earnings: '$800',
     points: '280',
     joined: '08/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
   {
     id: '9',
@@ -72,7 +81,8 @@ const leaderboardData = [
     earnings: '$700',
     points: '250',
     joined: '09/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
   {
     id: '10',
@@ -80,7 +90,8 @@ const leaderboardData = [
     earnings: '$600',
     points: '200',
     joined: '10/01/2022',
-    image: 'https://via.placeholder.com/150', // Replace with actual image URL
+    image:
+      'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png',
   },
 ];
 
@@ -101,15 +112,18 @@ const Leaderboard = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Leaderboard</Text>
-      <FlatList
-        data={leaderboardData}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+    <>
+      <View style={styles.container}>
+        <FlatList
+          data={leaderboardData}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+      
+      <BannerAds />
+    </>
   );
 };
 
@@ -120,11 +134,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
+
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
