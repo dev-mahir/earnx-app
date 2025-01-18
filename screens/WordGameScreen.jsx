@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,13 @@ import {
 } from 'react-native';
 import BannerAds from '../components/ads/BannerAds';
 import {
+<<<<<<< HEAD
   InterstitialAd,
   AdEventType,
+=======
+  BannerAd,
+  BannerAdSize,
+>>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
   TestIds,
 } from 'react-native-google-mobile-ads';
 
@@ -44,13 +49,15 @@ export default function WordGameScreen() {
   const [userInput, setUserInput] = useState('');
   const [score, setScore] = useState(0);
   const [result, setResult] = useState('');
-  const [hint, setHint] = useState('');
   const [timeLeft, setTimeLeft] = useState(15); // Timer starts at 15 seconds
   const [isGameOver, setIsGameOver] = useState(false);
 
   // Generate a random word with a missing letter
   const generateWord = () => {
+<<<<<<< HEAD
     const timeOver = 15; // Reset timer to 15 seconds
+=======
+>>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
     const randomIndex = Math.floor(Math.random() * words.length);
     const selectedWord = words[randomIndex];
     const missingLetterIndex = Math.floor(Math.random() * selectedWord.length);
@@ -64,13 +71,9 @@ export default function WordGameScreen() {
       selectedWord.substring(missingLetterIndex + 1);
     setWordDisplay(wordWithMissing);
 
-    // Generate a hint by revealing the missing letter
-    const revealedHint = `The missing letter is "${selectedWord[missingLetterIndex]}"`;
-    setHint(revealedHint);
-
     setUserInput('');
     setResult('');
-    setTimeLeft(timeOver); // Reset the timer for each word
+    setTimeLeft(15); // Reset the timer for each word
   };
 
   // Check if the user's guess is correct
@@ -79,8 +82,13 @@ export default function WordGameScreen() {
 
     if (userInput.toLowerCase() === currentWord) {
       setScore(prevScore => prevScore + 5);
+<<<<<<< HEAD
       setResult('Success! You guessed correctly. 🎉');
       setTimeout(() => generateWord(), 1000);
+=======
+      setResult('Correct! 🎉');
+      setTimeout(() => generateWord(), 1000); // Generate a new word after a delay
+>>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
     } else {
       setResult('Incorrect. Try again! 😞');
     }
@@ -94,7 +102,7 @@ export default function WordGameScreen() {
     } else if (timeLeft === 0) {
       setIsGameOver(true);
       Alert.alert("Time's up!", 'Game Over. Try again.', [
-        {text: 'Restart', onPress: restartGame},
+        { text: 'Restart', onPress: restartGame },
       ]);
     }
   }, [timeLeft, isGameOver]);
@@ -145,8 +153,19 @@ export default function WordGameScreen() {
 
   return (
     <>
+<<<<<<< HEAD
       <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
         <BannerAds />
+=======
+      <View style={styles.adContainer}>
+        <BannerAd
+          unitId={TestIds.BANNER}
+          size={BannerAdSize.FULL_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
+>>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
       </View>
 
       <View style={styles.container}>
@@ -176,8 +195,19 @@ export default function WordGameScreen() {
         </TouchableOpacity>
       </View>
 
+<<<<<<< HEAD
       <View style={{textAlign: 'center'}}>
         <BannerAds />
+=======
+      <View style={styles.adContainer}>
+        <BannerAd
+          unitId={TestIds.BANNER}
+          size={BannerAdSize.FULL_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
+>>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
       </View>
     </>
   );
@@ -188,7 +218,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+<<<<<<< HEAD
     backgroundColor: '#f0f0f0',
+=======
+    backgroundColor: '#fff',
+    padding: 20,
+  },
+  adContainer: {
+    marginBottom: 20,
+>>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
   },
   title: {
     fontSize: 24,
@@ -197,8 +235,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   timerContainer: {
-    alignItems: 'center',
     marginBottom: 20,
+    alignItems: 'center',
   },
   timerText: {
     fontSize: 18,
@@ -207,50 +245,56 @@ const styles = StyleSheet.create({
   },
   game: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   wordDisplay: {
-    fontSize: 18,
+    fontSize: 22,
+    fontWeight: 'bold',
     marginBottom: 10,
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
-    padding: 10,
+    padding: 12,
     width: '80%',
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: '#e9e9e9',
+    marginBottom: 15,
+    borderRadius: 8,
+    backgroundColor: '#f0f0f0',
   },
   button: {
     backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 8,
+    marginBottom: 15,
   },
   buttonText: {
-    color: '#FFF',
+    color: '#fff',
     fontWeight: 'bold',
   },
   result: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: '500',
     marginVertical: 10,
   },
   score: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#333',
   },
   restartButton: {
-    marginTop: 20,
-    alignSelf: 'center',
+    marginTop: 30,
     backgroundColor: '#FF4500',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
   },
   restartButtonText: {
-    color: '#FFF',
+    color: '#fff',
     fontWeight: 'bold',
   },
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
