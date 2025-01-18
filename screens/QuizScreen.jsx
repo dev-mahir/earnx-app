@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button, TouchableOpacity, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const quizData = [
   { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Lisbon"], answer: "Paris" },
@@ -23,9 +24,35 @@ const QuizComponent = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [score, setScore] = useState(0);
 
+  // Load previous score from AsyncStorage
+  useEffect(() => {
+    const loadScore = async () => {
+      try {
+        const savedScore = await AsyncStorage.getItem('quizScore');
+        if (savedScore !== null) {
+          setScore(Number(savedScore)); // Set the saved score
+        }
+      } catch (error) {
+        console.error('Failed to load score from AsyncStorage:', error);
+      }
+    };
+    loadScore();
+  }, []);
+
+  // Store score in AsyncStorage
+  const storeScore = async (newScore) => {
+    try {
+      await AsyncStorage.setItem('quizScore', newScore.toString());
+    } catch (error) {
+      console.error('Failed to save score to AsyncStorage:', error);
+    }
+  };
+
   const handleAnswer = (selectedAnswer) => {
     if (selectedAnswer === quizData[currentStep].answer) {
-      setScore(score + 1);
+      const newScore = score + 1;
+      setScore(newScore);
+      storeScore(newScore); // Store new score in AsyncStorage
     }
 
     if (currentStep + 1 < quizData.length) {
@@ -50,3 +77,22 @@ const QuizComponent = () => {
 };
 
 export default QuizComponent;
+
+
+
+
+//Reset score 
+
+//const resetScore = async () => {
+  try {
+    await AsyncStorage.removeItem('quizScore');
+    setScore(0);  // Reset state score
+    Alert.alert('Score Reset', 'Your score has been reset');
+  } catch (error) {
+    console.error('Failed to reset score:', error);
+  }
+};
+
+<TouchableOpacity onPress={resetScore} style={{ marginTop: 20 }}>
+  <Text style={{ color: 'red', textAlign: 'center' }}>Reset Score</Text>
+</TouchableOpacity>
