@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons'; // Using FontAwesome for the arrow icon
 
 const ProfileScreen = () => {
   return (
@@ -14,13 +15,14 @@ const ProfileScreen = () => {
           <Text style={styles.editProfileText}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.infoSection}>
         <View style={styles.infoItem}>
           <Text style={styles.infoTitle}>Total earnings</Text>
           <View style={styles.infoValueContainer}>
             <Text style={styles.infoValue}>$120.00</Text>
             <TouchableOpacity style={styles.arrowIcon}>
-              <Text>→</Text>
+              <FontAwesome name="angle-right" size={18} color="#888" />
             </TouchableOpacity>
           </View>
         </View>
@@ -29,23 +31,24 @@ const ProfileScreen = () => {
           <View style={styles.infoValueContainer}>
             <Text style={styles.infoValue}>10,000</Text>
             <TouchableOpacity style={styles.arrowIcon}>
-              <Text>→</Text>
+              <FontAwesome name="angle-right" size={18} color="#888" />
             </TouchableOpacity>
           </View>
         </View>
       </View>
+
       <View style={styles.settingsSection}>
         <Text style={styles.settingsTitle}>Settings</Text>
         <View style={styles.infoItem}>
           <Text style={styles.infoTitle}>Notifications</Text>
           <TouchableOpacity style={styles.arrowIcon}>
-            <Text>→</Text>
+            <FontAwesome name="angle-right" size={18} color="#888" />
           </TouchableOpacity>
         </View>
         <View style={styles.infoItem}>
           <Text style={styles.infoTitle}>Privacy</Text>
           <TouchableOpacity style={styles.arrowIcon}>
-            <Text>→</Text>
+            <FontAwesome name="angle-right" size={18} color="#888" />
           </TouchableOpacity>
         </View>
       </View>
@@ -59,46 +62,48 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginBottom: 20,
-  },
-  searchIcon: {
-    padding: 10,
-  },
   profileInfo: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 100,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: '#ddd',
   },
   profileName: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     marginVertical: 10,
+    color: '#333',
   },
   editProfileButton: {
-    backgroundColor: '#e9eef2',
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: '#f1f1f1',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   editProfileText: {
-    color: '#00',
+    fontSize: 16,
+    color: '#007bff',
+    fontWeight: '500',
   },
   infoSection: {
-    marginBottom: 20,
+    marginBottom: 30,
   },
   infoItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 10,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f1f1',
   },
   infoTitle: {
     fontSize: 16,
+    color: '#333',
   },
   infoValueContainer: {
     flexDirection: 'row',
@@ -106,7 +111,9 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     fontSize: 16,
+    fontWeight: '500',
     marginRight: 10,
+    color: '#333',
   },
   arrowIcon: {
     padding: 5,
@@ -117,7 +124,8 @@ const styles = StyleSheet.create({
   settingsTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
+    color: '#333',
   },
 });
 
