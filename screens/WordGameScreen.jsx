@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,6 @@ import {
   BannerAd,
   BannerAdSize,
   TestIds,
-  InterstitialAd,
-  AdEventType,
 } from 'react-native-google-mobile-ads';
 
 export default function WordGameScreen() {
@@ -23,13 +21,11 @@ export default function WordGameScreen() {
   const [userInput, setUserInput] = useState('');
   const [score, setScore] = useState(0);
   const [result, setResult] = useState('');
-  const [hint, setHint] = useState('');
   const [timeLeft, setTimeLeft] = useState(15); // Timer starts at 15 seconds
   const [isGameOver, setIsGameOver] = useState(false);
 
   // Generate a random word with a missing letter
   const generateWord = () => {
-    const timeOver = 20;
     const randomIndex = Math.floor(Math.random() * words.length);
     const selectedWord = words[randomIndex];
     const missingLetterIndex = Math.floor(Math.random() * selectedWord.length);
@@ -43,20 +39,16 @@ export default function WordGameScreen() {
       selectedWord.substring(missingLetterIndex + 1);
     setWordDisplay(wordWithMissing);
 
-    // Generate a hint by revealing the missing letter
-    const revealedHint = `The missing letter is "${selectedWord[missingLetterIndex]}"`;
-    setHint(revealedHint);
-
     setUserInput('');
     setResult('');
-    setTimeLeft(timeOver); // Reset the timer for each word
+    setTimeLeft(15); // Reset the timer for each word
   };
 
   // Check if the user's guess is correct
   const checkGuess = () => {
     if (userInput.toLowerCase() === currentWord) {
       setScore(prevScore => prevScore + 5);
-      setResult('Success! You guessed correctly. 🎉');
+      setResult('Correct! 🎉');
       setTimeout(() => generateWord(), 1000); // Generate a new word after a delay
     } else {
       setResult('Incorrect. Try again! 😞');
@@ -71,7 +63,7 @@ export default function WordGameScreen() {
     } else if (timeLeft === 0) {
       setIsGameOver(true);
       Alert.alert("Time's up!", 'Game Over. Try again.', [
-        {text: 'Restart', onPress: restartGame},
+        { text: 'Restart', onPress: restartGame },
       ]);
     }
   }, [timeLeft, isGameOver]);
@@ -90,7 +82,7 @@ export default function WordGameScreen() {
 
   return (
     <>
-      <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
+      <View style={styles.adContainer}>
         <BannerAd
           unitId={TestIds.BANNER}
           size={BannerAdSize.FULL_BANNER}
@@ -119,7 +111,6 @@ export default function WordGameScreen() {
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
           <Text style={styles.result}>{result}</Text>
-          {/* <Text style={styles.hint}>{hint}</Text> */}
           <Text style={styles.score}>Score: {score}</Text>
         </View>
 
@@ -128,7 +119,7 @@ export default function WordGameScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={{textAlign: 'center'}}>
+      <View style={styles.adContainer}>
         <BannerAd
           unitId={TestIds.BANNER}
           size={BannerAdSize.FULL_BANNER}
@@ -146,11 +137,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0', // Optional background color
+    backgroundColor: '#fff',
+    padding: 20,
   },
   adContainer: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
@@ -158,14 +149,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
   },
-  instructions: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
   timerContainer: {
-    alignItems: 'center',
     marginBottom: 20,
+    alignItems: 'center',
   },
   timerText: {
     fontSize: 18,
@@ -174,128 +160,52 @@ const styles = StyleSheet.create({
   },
   game: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   wordDisplay: {
-    fontSize: 18,
+    fontSize: 22,
+    fontWeight: 'bold',
     marginBottom: 10,
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
-    padding: 10,
+    padding: 12,
     width: '80%',
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: '#e9e9e9',
+    marginBottom: 15,
+    borderRadius: 8,
+    backgroundColor: '#f0f0f0',
   },
   button: {
     backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 8,
+    marginBottom: 15,
   },
   buttonText: {
-    color: '#FFF',
+    color: '#fff',
     fontWeight: 'bold',
   },
   result: {
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: '500',
     marginVertical: 10,
   },
-  hint: {
-    fontSize: 14,
-    marginTop: 10,
-    fontStyle: 'italic',
-    color: '#888',
-  },
   score: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#333',
   },
   restartButton: {
-    marginTop: 20,
-    alignSelf: 'center',
+    marginTop: 30,
     backgroundColor: '#FF4500',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
   },
   restartButtonText: {
-    color: '#FFF',
+    color: '#fff',
     fontWeight: 'bold',
   },
 });
-
-// import React, {useEffect, useState} from 'react';
-// import {Button, Platform, StatusBar} from 'react-native';
-// import {
-//   InterstitialAd,
-//   AdEventType,
-//   TestIds,
-// } from 'react-native-google-mobile-ads';
-
-// const adUnitId = __DEV__
-//   ? TestIds.INTERSTITIAL
-//   : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
-
-// const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-//   keywords: ['fashion', 'clothing'],
-// });
-
-// export default function LetterMissingGame() {
-//   const [loaded, setLoaded] = useState(false);
-
-//   useEffect(() => {
-//     const unsubscribeLoaded = interstitial.addAdEventListener(
-//       AdEventType.LOADED,
-//       () => {
-//         setLoaded(true);
-//       },
-//     );
-
-//     const unsubscribeOpened = interstitial.addAdEventListener(
-//       AdEventType.OPENED,
-//       () => {
-//         if (Platform.OS === 'ios') {
-//           // Prevent the close button from being unreachable by hiding the status bar on iOS
-//           StatusBar.setHidden(true);
-//         }
-//       },
-//     );
-
-//     const unsubscribeClosed = interstitial.addAdEventListener(
-//       AdEventType.CLOSED,
-//       () => {
-//         if (Platform.OS === 'ios') {
-//           StatusBar.setHidden(false);
-//         }
-//       },
-//     );
-
-//     // Start loading the interstitial straight away
-//     interstitial.load();
-
-//     // Unsubscribe from events on unmount
-//     return () => {
-//       unsubscribeLoaded();
-//       unsubscribeOpened();
-//       unsubscribeClosed();
-//     };
-//   }, []);
-
-//   // No advert ready to show yet
-//   if (!loaded) {
-//     return null;
-//   }
-
-//   return (
-//     <Button
-//       title="Show Interstitial"
-//       onPress={() => {
-//         interstitial.show();
-//       }}
-//     />
-//   );
-// }
