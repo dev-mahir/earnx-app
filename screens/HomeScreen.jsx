@@ -8,10 +8,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import BannerAds from '../components/ads/BannerAds';
-import GameSelectionModal from './TestScreen';
 import ModalCom from '../components/modal/ModalCom';
-import { useNavigation } from '@react-navigation/native';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 const options = [
   {id: '0', title: 'Game', icon: '🎮'},
   {id: '2', title: 'Quiz', icon: '❓'},
@@ -21,7 +19,7 @@ const options = [
   {id: '6', title: 'Refer', icon: '🔄'},
 ];
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -31,29 +29,28 @@ export default function HomeScreen() {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           {/* Left Icon */}
+
           <TouchableOpacity style={styles.iconContainer}>
-            <Image
-              source={require('../assets/banner.png')} // Replace with your icon
-              style={styles.icon}
-            />
+            <Icon name="menu" size={32} color="#000" />
           </TouchableOpacity>
 
           {/* Center Button */}
           <TouchableOpacity style={styles.centerButton}>
-            <Image
-              source={require('../assets/banner.png')} // Replace with your icon
-              style={styles.centerIcon}
-            />
+            <Icon name="doller" size={32} color="#000" />
             <Text style={styles.centerText}>Balance</Text>
           </TouchableOpacity>
 
-          {/* Right Icon */}
-          <TouchableOpacity style={styles.iconContainer}>
-            <Image
-              source={require('../assets/banner.png')} // Replace with your icon
-              style={styles.icon}
-            />
-          </TouchableOpacity>
+          <View style={styles.profileContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+              <Image
+                style={styles.profilePhoto}
+                source={require('../assets/mahir.jpg')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconContainer}>
+              <Icon name="notification" size={32} color="#000" />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <Image style={styles.banner} source={require('../assets/banner.png')} />
@@ -120,6 +117,16 @@ const styles = StyleSheet.create({
     height: 18,
     marginRight: 8,
     resizeMode: 'contain',
+  },
+  profileContainer: {
+    flexDirection: 'row',
+    columnGap: 10,
+    alignItems: 'center',
+  },
+  profilePhoto: {
+    height: 40,
+    width: 40,
+    borderRadius: 100,
   },
   centerText: {
     fontSize: 14,

@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:name=".MainApplication"
@@ -15,7 +17,7 @@
         <!-- Add tools:replace to resolve the conflict -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"
+            android:value="ca-app-pub-4204160329524961~2047362261"
             tools:replace="android:value" />
 
         <activity

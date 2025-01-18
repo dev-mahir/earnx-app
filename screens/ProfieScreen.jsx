@@ -6,10 +6,10 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <View style={styles.profileInfo}>
         <Image
-          source={require('../assets/earnx.png')}
+          source={require('../assets/mahir.jpg')}
           style={styles.profileImage}
         />
-        <Text style={styles.profileName}>Lily, $120.00</Text>
+        <Text style={styles.profileName}>Mahir, $120.00</Text>
         <TouchableOpacity style={styles.editProfileButton}>
           <Text style={styles.editProfileText}>Edit Profile</Text>
         </TouchableOpacity>

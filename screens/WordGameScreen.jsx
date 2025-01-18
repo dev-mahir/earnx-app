@@ -7,13 +7,34 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import BannerAds from '../components/ads/BannerAds';
 import {
-  BannerAd,
-  BannerAdSize,
-  TestIds,
   InterstitialAd,
   AdEventType,
+  TestIds,
 } from 'react-native-google-mobile-ads';
+
+import { IN_AD_ID_PRO, IN_AD_ID_DEV } from '@env';
+
+
+const interstitialAdUnitId = __DEV__ ? IN_AD_ID_DEV : IN_AD_ID_PRO;
+
+console.log(interstitialAdUnitId);
+
+
+const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdUnitId, {
+  requestNonPersonalizedAdsOnly: true, 
+});
+
+
+const showInterstitialAd = () => {
+  if (interstitialAd.isLoaded) {
+    interstitialAd.show();
+  } else {
+    console.log('Interstitial Ad not ready, loading...');
+    interstitialAd.load(); 
+  }
+};
 
 export default function WordGameScreen() {
   const words = ['javascript', 'python', 'ruby', 'java', 'html', 'css'];
@@ -29,7 +50,7 @@ export default function WordGameScreen() {
 
   // Generate a random word with a missing letter
   const generateWord = () => {
-    const timeOver = 20;
+    const timeOver = 15; // Reset timer to 15 seconds
     const randomIndex = Math.floor(Math.random() * words.length);
     const selectedWord = words[randomIndex];
     const missingLetterIndex = Math.floor(Math.random() * selectedWord.length);
@@ -54,10 +75,12 @@ export default function WordGameScreen() {
 
   // Check if the user's guess is correct
   const checkGuess = () => {
+    showInterstitialAd(); // Show the interstitial ad
+
     if (userInput.toLowerCase() === currentWord) {
       setScore(prevScore => prevScore + 5);
       setResult('Success! You guessed correctly. 🎉');
-      setTimeout(() => generateWord(), 1000); // Generate a new word after a delay
+      setTimeout(() => generateWord(), 1000);
     } else {
       setResult('Incorrect. Try again! 😞');
     }
@@ -83,21 +106,47 @@ export default function WordGameScreen() {
     generateWord();
   };
 
-  // Initialize the game on mount
+  // Initialize the game and interstitial ad on mount
   useEffect(() => {
     generateWord();
+
+    // Load interstitial ad and set up event listeners
+    const unsubscribeLoaded = interstitialAd.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        console.log('Interstitial Ad loaded');
+      },
+    );
+
+    const unsubscribeClosed = interstitialAd.addAdEventListener(
+      AdEventType.CLOSED,
+      () => {
+        console.log('Interstitial Ad closed, reloading...');
+        interstitialAd.load(); // Reload the ad after it closes
+      },
+    );
+
+    const unsubscribeError = interstitialAd.addAdEventListener(
+      AdEventType.ERROR,
+      error => {
+        console.error('Interstitial Ad error:', error);
+      },
+    );
+
+    interstitialAd.load(); // Load the ad initially
+
+    // Cleanup event listeners on unmount
+    return () => {
+      unsubscribeLoaded();
+      unsubscribeClosed();
+      unsubscribeError();
+    };
   }, []);
 
   return (
     <>
       <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
-        <BannerAd
-          unitId={TestIds.BANNER}
-          size={BannerAdSize.FULL_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        />
+        <BannerAds />
       </View>
 
       <View style={styles.container}>
@@ -119,7 +168,6 @@ export default function WordGameScreen() {
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
           <Text style={styles.result}>{result}</Text>
-          {/* <Text style={styles.hint}>{hint}</Text> */}
           <Text style={styles.score}>Score: {score}</Text>
         </View>
 
@@ -129,13 +177,7 @@ export default function WordGameScreen() {
       </View>
 
       <View style={{textAlign: 'center'}}>
-        <BannerAd
-          unitId={TestIds.BANNER}
-          size={BannerAdSize.FULL_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        />
+        <BannerAds />
       </View>
     </>
   );
@@ -146,20 +188,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0', // Optional background color
-  },
-  adContainer: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    backgroundColor: '#f0f0f0',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  instructions: {
-    fontSize: 16,
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -204,12 +237,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginVertical: 10,
   },
-  hint: {
-    fontSize: 14,
-    marginTop: 10,
-    fontStyle: 'italic',
-    color: '#888',
-  },
   score: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -227,75 +254,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-// import React, {useEffect, useState} from 'react';
-// import {Button, Platform, StatusBar} from 'react-native';
-// import {
-//   InterstitialAd,
-//   AdEventType,
-//   TestIds,
-// } from 'react-native-google-mobile-ads';
-
-// const adUnitId = __DEV__
-//   ? TestIds.INTERSTITIAL
-//   : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
-
-// const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-//   keywords: ['fashion', 'clothing'],
-// });
-
-// export default function LetterMissingGame() {
-//   const [loaded, setLoaded] = useState(false);
-
-//   useEffect(() => {
-//     const unsubscribeLoaded = interstitial.addAdEventListener(
-//       AdEventType.LOADED,
-//       () => {
-//         setLoaded(true);
-//       },
-//     );
-
-//     const unsubscribeOpened = interstitial.addAdEventListener(
-//       AdEventType.OPENED,
-//       () => {
-//         if (Platform.OS === 'ios') {
-//           // Prevent the close button from being unreachable by hiding the status bar on iOS
-//           StatusBar.setHidden(true);
-//         }
-//       },
-//     );
-
-//     const unsubscribeClosed = interstitial.addAdEventListener(
-//       AdEventType.CLOSED,
-//       () => {
-//         if (Platform.OS === 'ios') {
-//           StatusBar.setHidden(false);
-//         }
-//       },
-//     );
-
-//     // Start loading the interstitial straight away
-//     interstitial.load();
-
-//     // Unsubscribe from events on unmount
-//     return () => {
-//       unsubscribeLoaded();
-//       unsubscribeOpened();
-//       unsubscribeClosed();
-//     };
-//   }, []);
-
-//   // No advert ready to show yet
-//   if (!loaded) {
-//     return null;
-//   }
-
-//   return (
-//     <Button
-//       title="Show Interstitial"
-//       onPress={() => {
-//         interstitial.show();
-//       }}
-//     />
-//   );
-// }

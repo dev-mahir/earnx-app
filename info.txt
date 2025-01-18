@@ -7,3 +7,9 @@ cd android
 ./gradlew clean
 cd ..
 npx react-native run-android
+
+
+
+Build your app for production:==
+react-native run-android --variant=release
+react-native run-ios --configuration Release
