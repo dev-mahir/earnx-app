@@ -15,38 +15,30 @@ import HomeScreen from './screens/HomeScreen';
 import TestScreen from './screens/TestScreen';
 import WordGameScreen from './screens/WordGameScreen';
 import CarGameScreen from './screens/CarGameScreen';
+import CarM from './screens/CarM';
+import LoginScreen from './screens/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [hasInternet, setHasInternet] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
-  // useEffect(() => {
-  //   // Check internet connection
-  //   const unsubscribe = NetInfo.addEventListener(state => {
-  //     setHasInternet(state.isConnected && state.isInternetReachable);
-  //   });
+  // Check authentication status
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(setUser);
+    setIsLoading(false); // Once auth state is checked, stop loading
+    return subscriber; // Unsubscribe on unmount
+  }, []);
 
-  //   // Clean up the subscription
-  //   return () => unsubscribe();
-  // }, []);
-
-  // if (!hasInternet) {
-  //   return (
-  //     <View style={styles.noInternetContainer}>
-  //       <Text style={styles.noInternetText}>No Internet Connection</Text>
-  //       <Button
-  //         title="Retry"
-  //         onPress={() =>
-  //           NetInfo.fetch().then(state =>
-  //             setHasInternet(state.isConnected && state.isInternetReachable),
-  //           )
-  //         }
-  //       />
-  //     </View>
-  //   );
-  // }
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   useEffect(() => {
     mobileAds()
@@ -62,8 +54,16 @@ export default function App() {
   // Stack Navigator for Game
   const GameStack = () => (
     <Stack.Navigator initialRouteName="Homes">
+      {/* If user is logged in, show HomeScreen */}
+      {user ? (
+        <Stack.Screen name="Home" component={HomeScreen} />
+      ) : (
+        // Otherwise show LoginScreen
+        <Stack.Screen name="Login" component={LoginScreen} />
+      )}
+
       <Stack.Screen
-        name="Homes"
+        name="Home"
         component={HomeScreen}
         options={{
           title: 'Home',
@@ -75,6 +75,14 @@ export default function App() {
         component={GameScreen}
         options={{
           title: 'Game',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="CarM"
+        component={CarM}
+        options={{
+          title: 'CarM',
           headerShown: false,
         }}
       />
@@ -111,6 +119,14 @@ export default function App() {
       <Stack.Screen
         name="WordGameScreen"
         component={WordGameScreen}
+        options={{
+          title: 'Word Game',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
         options={{
           title: 'Word Game',
           headerShown: false,

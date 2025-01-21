@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,39 +7,22 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // For storing score locally
 import BannerAds from '../components/ads/BannerAds';
 import {
-<<<<<<< HEAD
   InterstitialAd,
   AdEventType,
-=======
-  BannerAd,
-  BannerAdSize,
->>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
   TestIds,
 } from 'react-native-google-mobile-ads';
 
-import { IN_AD_ID_PRO, IN_AD_ID_DEV } from '@env';
+import {IN_AD_ID_PRO, IN_AD_ID_DEV} from '@env';
 
+const interstitialAdUnitId = __DEV__ ? TestIds.INTERSTITIAL : IN_AD_ID_PRO;
 
-const interstitialAdUnitId = __DEV__ ? IN_AD_ID_DEV : IN_AD_ID_PRO;
-
-console.log(interstitialAdUnitId);
-
-
+// Create the interstitial ad instance
 const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdUnitId, {
-  requestNonPersonalizedAdsOnly: true, 
+  requestNonPersonalizedAdsOnly: true,
 });
-
-
-const showInterstitialAd = () => {
-  if (interstitialAd.isLoaded) {
-    interstitialAd.show();
-  } else {
-    console.log('Interstitial Ad not ready, loading...');
-    interstitialAd.load(); 
-  }
-};
 
 export default function WordGameScreen() {
   const words = ['javascript', 'python', 'ruby', 'java', 'html', 'css'];
@@ -51,13 +34,39 @@ export default function WordGameScreen() {
   const [result, setResult] = useState('');
   const [timeLeft, setTimeLeft] = useState(15); // Timer starts at 15 seconds
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isAdLoaded, setIsAdLoaded] = useState(false); // Track ad loading state
+
+  // Load the stored score on component mount
+  useEffect(() => {
+    const loadScore = async () => {
+      try {
+        const savedScore = await AsyncStorage.getItem('score');
+        if (savedScore !== null) {
+          setScore(parseInt(savedScore, 10));
+        }
+      } catch (error) {
+        console.error('Failed to load score:', error);
+      }
+    };
+
+    loadScore();
+  }, []);
+
+  // Save the score to local storage whenever it updates
+  useEffect(() => {
+    const saveScore = async () => {
+      try {
+        await AsyncStorage.setItem('score', score.toString());
+      } catch (error) {
+        console.error('Failed to save score:', error);
+      }
+    };
+
+    saveScore();
+  }, [score]);
 
   // Generate a random word with a missing letter
   const generateWord = () => {
-<<<<<<< HEAD
-    const timeOver = 15; // Reset timer to 15 seconds
-=======
->>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
     const randomIndex = Math.floor(Math.random() * words.length);
     const selectedWord = words[randomIndex];
     const missingLetterIndex = Math.floor(Math.random() * selectedWord.length);
@@ -76,24 +85,6 @@ export default function WordGameScreen() {
     setTimeLeft(15); // Reset the timer for each word
   };
 
-  // Check if the user's guess is correct
-  const checkGuess = () => {
-    showInterstitialAd(); // Show the interstitial ad
-
-    if (userInput.toLowerCase() === currentWord) {
-      setScore(prevScore => prevScore + 5);
-<<<<<<< HEAD
-      setResult('Success! You guessed correctly. 🎉');
-      setTimeout(() => generateWord(), 1000);
-=======
-      setResult('Correct! 🎉');
-      setTimeout(() => generateWord(), 1000); // Generate a new word after a delay
->>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
-    } else {
-      setResult('Incorrect. Try again! 😞');
-    }
-  };
-
   // Handle timer countdown
   useEffect(() => {
     if (timeLeft > 0 && !isGameOver) {
@@ -102,16 +93,31 @@ export default function WordGameScreen() {
     } else if (timeLeft === 0) {
       setIsGameOver(true);
       Alert.alert("Time's up!", 'Game Over. Try again.', [
-        { text: 'Restart', onPress: restartGame },
+        {text: 'Restart', onPress: restartGame},
       ]);
     }
   }, [timeLeft, isGameOver]);
 
   // Restart the game
   const restartGame = () => {
-    setScore(0);
     setIsGameOver(false);
     generateWord();
+  };
+
+  // Attempt to show the interstitial ad
+  const attemptShowAd = () => {
+    if (isAdLoaded) {
+      interstitialAd.show();
+    } else {
+      console.log('Ad not ready. Retrying in 2 seconds...');
+      setTimeout(() => {
+        if (isAdLoaded) {
+          interstitialAd.show();
+        } else {
+          console.log('Ad still not ready. Skipping this attempt.');
+        }
+      }, 2000);
+    }
   };
 
   // Initialize the game and interstitial ad on mount
@@ -123,6 +129,7 @@ export default function WordGameScreen() {
       AdEventType.LOADED,
       () => {
         console.log('Interstitial Ad loaded');
+        setIsAdLoaded(true); // Update state when ad is loaded
       },
     );
 
@@ -130,7 +137,8 @@ export default function WordGameScreen() {
       AdEventType.CLOSED,
       () => {
         console.log('Interstitial Ad closed, reloading...');
-        interstitialAd.load(); // Reload the ad after it closes
+        setIsAdLoaded(false); // Reset state
+        interstitialAd.load(); // Reload the ad
       },
     );
 
@@ -151,21 +159,23 @@ export default function WordGameScreen() {
     };
   }, []);
 
+  // Check if the user's guess is correct
+  const checkGuess = () => {
+    attemptShowAd(); // Show the interstitial ad
+
+    if (userInput.toLowerCase() === currentWord) {
+      setScore(prevScore => prevScore + 5);
+      setResult('Success! You guessed correctly. 🎉');
+      setTimeout(() => generateWord(), 1000);
+    } else {
+      setResult('Incorrect. Try again! 😞');
+    }
+  };
+
   return (
     <>
-<<<<<<< HEAD
       <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
         <BannerAds />
-=======
-      <View style={styles.adContainer}>
-        <BannerAd
-          unitId={TestIds.BANNER}
-          size={BannerAdSize.FULL_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        />
->>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
       </View>
 
       <View style={styles.container}>
@@ -195,38 +205,18 @@ export default function WordGameScreen() {
         </TouchableOpacity>
       </View>
 
-<<<<<<< HEAD
       <View style={{textAlign: 'center'}}>
         <BannerAds />
-=======
-      <View style={styles.adContainer}>
-        <BannerAd
-          unitId={TestIds.BANNER}
-          size={BannerAdSize.FULL_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        />
->>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
       </View>
     </>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-<<<<<<< HEAD
     backgroundColor: '#f0f0f0',
-=======
-    backgroundColor: '#fff',
-    padding: 20,
-  },
-  adContainer: {
-    marginBottom: 20,
->>>>>>> cffec65508261130b64ac6d8fd882e262383dba7
   },
   title: {
     fontSize: 24,
@@ -293,8 +283,4 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> cffec65508261130b64ac6d8fd882e262383dba7

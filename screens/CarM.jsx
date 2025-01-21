@@ -32,7 +32,7 @@ const checkCollision = (car, coin) => {
   );
 };
 
-const Game = () => {
+const CarM = () => {
   const [running, setRunning] = useState(true);
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
@@ -179,4 +179,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Game;
+export default CarM;

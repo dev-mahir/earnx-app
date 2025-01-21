@@ -36,7 +36,7 @@ export default function HomeScreen({navigation}) {
 
           {/* Center Button */}
           <TouchableOpacity style={styles.centerButton}>
-            <Icon name="doller" size={32} color="#000" />
+            <Icon name="menu" size={32} color="#000" />
             <Text style={styles.centerText}>Balance</Text>
           </TouchableOpacity>
 
@@ -48,7 +48,7 @@ export default function HomeScreen({navigation}) {
               />
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconContainer}>
-              <Icon name="notification" size={32} color="#000" />
+              <Icon name="menu" size={32} color="#000" />
             </TouchableOpacity>
           </View>
         </View>

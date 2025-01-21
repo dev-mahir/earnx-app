@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Using FontAwesome for the arrow icon
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Import the FontAwesome icon set
 
 const ProfileScreen = () => {
   return (
